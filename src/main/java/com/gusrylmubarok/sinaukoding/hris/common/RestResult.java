@@ -27,6 +27,11 @@ public class RestResult  implements Serializable {
         this.rows = rows;
     }
 
+    public RestResult(Object data, String status) {
+        this.data = data;
+        this.status = status;
+    }
+
     public RestResult(String status) {
         this.status = status;
     }
