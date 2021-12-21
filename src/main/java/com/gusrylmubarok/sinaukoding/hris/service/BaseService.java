@@ -39,6 +39,7 @@ public abstract class BaseService<T extends BaseEntity<T>> {
         return getDAO().findOne(param);
     }
 
+    @Transactional(readOnly = true)
     public Collection<T> find(T param, int offset, int limit) {
         return getDAO().find(param, offset, limit);
     }
