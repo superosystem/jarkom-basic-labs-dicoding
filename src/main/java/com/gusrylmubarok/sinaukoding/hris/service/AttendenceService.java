@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Attendence extends BaseService<Attendance> {
+public class AttendenceService extends BaseService<Attendance> {
 
     @Autowired
     private AttendanceDAO dao;
