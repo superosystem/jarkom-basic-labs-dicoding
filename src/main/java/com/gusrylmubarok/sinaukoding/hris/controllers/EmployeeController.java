@@ -15,13 +15,13 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/employees")
 @PreAuthorize("permitAll()")
-public class EmployeeControlller extends BaseController {
+public class EmployeeController extends BaseController {
 
     @Autowired
     private EmployeeService service;
 
     @GetMapping
-    public RestResult get(@RequestParam(value = "param") String param,
+    public RestResult get(@RequestParam(value = "param", required = false) String param,
                           @RequestParam(value = "offset") int offset,
                           @RequestParam(value = "limit") int limit)throws JsonProcessingException {
         Employee employee = param != null ? new ObjectMapper().readValue(param, Employee.class) : null;
