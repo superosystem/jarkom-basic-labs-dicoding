@@ -39,16 +39,13 @@ public abstract class BaseEntity<T> implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedTime;
 
-    @Column(name = "created_by", columnDefinition = "BIGINT(20)")
-    @CreatedBy
+    @Column(name = "created_by", columnDefinition = "VARCHAR(100)")
     private String createdBy;
 
-    @Column(name = "deleted_by", columnDefinition = "BIGINT(20)")
-    @LastModifiedBy
+    @Column(name = "deleted_by", columnDefinition = "VARCHAR(100)")
     private String deletedBy;
 
-    @Column(name = "updated_by", columnDefinition = "BIGINT(20)")
-    @LastModifiedBy
+    @Column(name = "updated_by", columnDefinition = "VARCHAR(100)")
     private String updatedBy;
 
     @PrePersist
