@@ -20,9 +20,13 @@ public class RestResult implements Serializable {
         this.data = data;
     }
 
+    public RestResult(String status) {
+        this.status = status;
+    }
+
     public RestResult(Object data, Long rows) {
         this.data = data;
-        this.data = rows;
+        this.rows = rows;
     }
 
     public RestResult(Object data, String status) {
@@ -30,7 +34,9 @@ public class RestResult implements Serializable {
         this.status = status;
     }
 
-    public RestResult(String status) {
+    public RestResult(Object data, Long rows, String status) {
+        this.data = data;
+        this.rows = rows;
         this.status = status;
     }
 }
