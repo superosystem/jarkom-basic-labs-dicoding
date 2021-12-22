@@ -7,5 +7,5 @@ Development Steps
 3. DAO 
 4. Service
 5. Controller
-6. JWT *
-7. LOGIN and Session
+6. JWT 
+7. Login and Session 
