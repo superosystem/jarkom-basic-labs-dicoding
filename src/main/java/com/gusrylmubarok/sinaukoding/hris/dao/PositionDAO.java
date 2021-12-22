@@ -14,6 +14,18 @@ public class PositionDAO extends BaseDAO<Position> {
     public List<Predicate> predicates(Position param, CriteriaBuilder builder, Root<Position> root, boolean isCount) {
         List<Predicate> predicates = super.predicates(param, builder, root, isCount);
 
+        if (param != null) {
+            if (param.getName() != null) {
+                predicates.add(builder.like(root.get("name"), "%" + param.getName() + "%"));
+            }
+        }
+
+        if (param != null) {
+            if (param.getNote() != null) {
+                predicates.add(builder.like(root.get("note"), "%" + param.getNote() + "%"));
+            }
+        }
+
         return predicates;
     }
 }

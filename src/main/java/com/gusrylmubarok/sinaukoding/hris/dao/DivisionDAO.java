@@ -14,6 +14,18 @@ public class DivisionDAO extends BaseDAO<Division> {
     public List<Predicate> predicates(Division param, CriteriaBuilder builder, Root<Division> root, boolean isCount) {
         List<Predicate> predicates = super.predicates(param, builder, root, isCount);
 
+        if (param != null) {
+            if (param.getName() != null) {
+                predicates.add(builder.like(root.get("name"), "%" + param.getName() + "%"));
+            }
+        }
+
+        if (param != null) {
+            if (param.getNote() != null) {
+                predicates.add(builder.like(root.get("note"), "%" + param.getNote() + "%"));
+            }
+        }
+
         return predicates;
     }
 }
