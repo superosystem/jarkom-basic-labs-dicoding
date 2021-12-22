@@ -28,7 +28,7 @@ public class BankController extends BaseController {
 
         long rows = service.count(position);
 
-        return new RestResult(rows > 0 ? service.find(position, offset, limit) : new ArrayList<>());
+        return new RestResult(rows > 0 ? service.find(position, offset, limit) : new ArrayList<>(), rows);
     }
 
     @PreAuthorize("permitAll()")

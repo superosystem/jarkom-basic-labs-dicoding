@@ -28,7 +28,7 @@ public class DivisionController extends BaseController {
 
         long rows = service.count(division);
 
-        return new RestResult(rows > 0 ? service.find(division, offset, limit) : new ArrayList<>());
+        return new RestResult(rows > 0 ? service.find(division, offset, limit) : new ArrayList<>(), rows);
     }
 
     @PreAuthorize("permitAll()")

@@ -28,7 +28,7 @@ public class CompanyController extends BaseController {
 
         long rows = service.count(company);
 
-        return new RestResult(rows > 0 ? service.find(company, offset, limit) : new ArrayList<>());
+        return new RestResult(rows > 0 ? service.find(company, offset, limit) : new ArrayList<>(), rows);
     }
 
     @PreAuthorize("permitAll()")
