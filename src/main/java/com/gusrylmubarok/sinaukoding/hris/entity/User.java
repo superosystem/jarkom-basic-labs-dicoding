@@ -100,4 +100,8 @@ public class User extends BaseEntity<User> {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="bank_id")
     private Bank bank;
+
+    public User(String username) {
+     this.username = username;
+    }
 }

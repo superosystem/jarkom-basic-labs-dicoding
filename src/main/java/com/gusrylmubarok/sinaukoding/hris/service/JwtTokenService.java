@@ -27,7 +27,7 @@ public class JwtTokenService {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                         .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(SignatureAlgorithm.ES512, secret).compact();
+                .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
 
     public String generateToken(UserDetails userDetails) {
