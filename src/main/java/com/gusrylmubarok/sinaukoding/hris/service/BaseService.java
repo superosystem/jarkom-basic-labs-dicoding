@@ -33,6 +33,7 @@ public abstract class BaseService<T extends BaseEntity<T>> {
     @Transactional
     public T update(T entity){
         if (entity.getId() != null){
+            entity.getCreatedBy();
             return getDAO().update(entity);
         }
         return null;
