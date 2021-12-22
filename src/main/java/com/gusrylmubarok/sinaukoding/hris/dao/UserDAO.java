@@ -15,6 +15,12 @@ public class UserDAO extends BaseDAO<User> {
     public List<Predicate> predicates(User param, CriteriaBuilder builder, Root<User> root, boolean isCount) {
         List<Predicate> predicates = super.predicates(param, builder, root, isCount);
 
+        if (param != null) {
+            if (param.getUsername() != null) {
+                predicates.add(builder.equal(root.get("username"), param.getUsername()));
+            }
+        }
+
         return predicates;
     }
 

@@ -97,4 +97,11 @@ public class User extends BaseEntity<User> {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @Column(name = "token")
+    private String token;
+
+    public User(String username) {
+        this.username = username;
+    }
 }
