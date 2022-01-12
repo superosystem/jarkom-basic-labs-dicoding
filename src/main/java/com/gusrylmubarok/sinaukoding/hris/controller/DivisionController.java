@@ -26,7 +26,7 @@ public class DivisionController extends BaseController {
                           @RequestParam(value = "limit") int limit) throws JsonProcessingException {
         Division division = param != null ? new ObjectMapper().readValue(param, Division.class) : null;
 
-        long rows = service.count(division);
+        Long rows = service.count(division);
 
         return new RestResult(rows > 0 ? service.find(division, offset, limit) : new ArrayList<>(), rows);
     }
@@ -42,14 +42,27 @@ public class DivisionController extends BaseController {
     @PreAuthorize("permitAll()")
     @PutMapping
     public RestResult update(@RequestBody Division division) {
-        division = service.update(division);
 
-        return new RestResult(division, division != null ? StatusCode.UPDATE_SUCCESS : StatusCode.UPDATE_FAILED);
+        RestResult result = new RestResult(StatusCode.OPERATION_FAILED);
+
+        if(division != null) {
+            result.setData(service.update(division));
+            result.setData(StatusCode.UPDATE_SUCCESS);
+        }
+         return result;
     }
 
     @PreAuthorize("permitAll()")
     @DeleteMapping(value = "{id}")
     public RestResult delete(@PathVariable Long id) {
-        return new RestResult(service.delete(id) ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
+        boolean deleted = false;
+        Division entity = service.findById(id);
+
+        if(entity != null) {
+            service.updateDeleteStatus(id);
+            deleted = service.delete(id);
+        }
+
+        return new RestResult(deleted ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
     }
 }

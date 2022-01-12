@@ -14,12 +14,12 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("users")
+@PreAuthorize("permitAll()")
 public class UserController extends BaseController {
 
     @Autowired
     private UserService service;
 
-    @PreAuthorize("permitAll()")
     @GetMapping
     public RestResult get(@RequestParam(value = "param", required = false) String param,
                           @RequestParam(value = "offset") int offset,
@@ -31,26 +31,29 @@ public class UserController extends BaseController {
         return new RestResult(rows > 0 ? service.find(user, offset, limit) : new ArrayList<>(), rows);
     }
 
-    @PreAuthorize("permitAll()")
-    @PostMapping
-    public RestResult save(@RequestBody User param) {
-        param = service.save(param);
-
-        return new RestResult(param, param != null ? StatusCode.SAVE_SUCCESS : StatusCode.SAVE_FAILED);
-    }
-
-    @PreAuthorize("permitAll()")
     @PutMapping
     public RestResult update(@RequestBody User user) {
-        user = service.update(user);
+        RestResult result = new RestResult(StatusCode.OPERATION_FAILED);
 
-        return new RestResult(user, user != null ? StatusCode.UPDATE_SUCCESS : StatusCode.UPDATE_FAILED);
+        if (user != null) {
+            result.setData(service.update(user));
+            result.setStatus(StatusCode.UPDATE_SUCCESS);
+        }
+
+        return result;
     }
 
-    @PreAuthorize("permitAll()")
     @DeleteMapping(value = "{id}")
     public RestResult delete(@PathVariable Long id) {
-        return new RestResult(service.delete(id) ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
+        boolean deleted = false;
+        User entity = service.findById(id);
+
+        if (entity != null) {
+            service.updateDeleteStatus(id);
+            deleted = service.delete(id);
+        }
+
+        return new RestResult(deleted ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
     }
 
 }

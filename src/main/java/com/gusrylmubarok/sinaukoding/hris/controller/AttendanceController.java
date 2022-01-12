@@ -46,15 +46,52 @@ public class AttendanceController extends BaseController {
     @PreAuthorize("permitAll()")
     @PutMapping
     public RestResult update(@RequestBody Attendance attendance) {
-        attendance = service.update(attendance);
+        RestResult result = new RestResult(StatusCode.OPERATION_FAILED);
 
-        return new RestResult(attendance, attendance != null ? StatusCode.UPDATE_SUCCESS : StatusCode.UPDATE_FAILED);
+        if (attendance != null) {
+            result.setData(service.update(attendance));
+            result.setStatus(StatusCode.UPDATE_SUCCESS);
+        }
+
+        return result;
+    }
+
+    @PutMapping("/start-rest")
+    public RestResult startRest(@RequestBody Attendance param) {
+        RestResult result = new RestResult(StatusCode.OPERATION_FAILED);
+
+        if (param != null) {
+            result.setData(service.startRest(param));
+            result.setStatus(StatusCode.UPDATE_SUCCESS);
+        }
+
+        return result;
+    }
+
+    @PutMapping("/end-rest")
+    public RestResult endRest(@RequestBody Attendance param) {
+        RestResult result = new RestResult(StatusCode.OPERATION_FAILED);
+
+        if (param != null) {
+            result.setData(service.endRest(param));
+            result.setStatus(StatusCode.UPDATE_SUCCESS);
+        }
+
+        return result;
     }
 
     @PreAuthorize("permitAll()")
     @DeleteMapping(value = "{id}")
     public RestResult delete(@PathVariable Long id) {
-        return new RestResult(service.delete(id) ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
+        boolean deleted = false;
+        Attendance entity = service.findById(id);
+
+        if (entity != null) {
+            service.updateDeleteStatus(id);
+            deleted = service.delete(id);
+        }
+
+        return new RestResult(deleted ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
     }
 
 

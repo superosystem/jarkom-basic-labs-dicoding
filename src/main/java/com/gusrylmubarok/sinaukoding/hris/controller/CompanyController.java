@@ -42,14 +42,26 @@ public class CompanyController extends BaseController {
     @PreAuthorize("permitAll()")
     @PutMapping
     public RestResult update(@RequestBody Company company) {
-        company = service.update(company);
+        RestResult result = new RestResult(StatusCode.OPERATION_FAILED);
 
-        return new RestResult(company, company != null ? StatusCode.UPDATE_SUCCESS : StatusCode.UPDATE_FAILED);
+        if (company != null) {
+            result.setData(service.update(company));
+            result.setStatus(StatusCode.UPDATE_SUCCESS);
+        }
+        return result;
     }
 
     @PreAuthorize("permitAll()")
     @DeleteMapping(value = "{id}")
     public RestResult delete(@PathVariable Long id) {
-        return new RestResult(service.delete(id) ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
+        boolean deleted = false;
+        Company entity = service.findById(id);
+
+        if (entity != null) {
+            service.updateDeleteStatus(id);
+            deleted = service.delete(id);
+        }
+
+        return new RestResult(deleted ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
     }
 }

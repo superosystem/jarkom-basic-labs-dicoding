@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("employees")
+@PreAuthorize("permitAll()")
 public class EmployeeController extends BaseController {
 
     @Autowired
@@ -55,7 +56,16 @@ public class EmployeeController extends BaseController {
     @PreAuthorize("permitAll()")
     @DeleteMapping(value = "{id}")
     public RestResult delete(@PathVariable Long id) {
-        return new RestResult(service.delete(id) ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
+        boolean deleted = false;
+        Employee entity = service.findById(id);
+
+        if (entity != null) {
+            service.inactiveStatus(entity);
+            service.updateDeleteStatus(id);
+            deleted = service.delete(id);
+        }
+
+        return new RestResult(deleted ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
     }
 
 }

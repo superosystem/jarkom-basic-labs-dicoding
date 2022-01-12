@@ -3,6 +3,8 @@ package com.gusrylmubarok.sinaukoding.hris.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,6 +13,8 @@ import java.util.Date;
 @Table(name = "employee")
 @Getter @Setter
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE employee SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Employee extends BaseEntity<Employee> {
 
     private static final long serialVersionUID = 7352682923729393109L;

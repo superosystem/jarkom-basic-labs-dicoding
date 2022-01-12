@@ -4,6 +4,7 @@ import com.gusrylmubarok.sinaukoding.hris.HrisApplication;
 import com.gusrylmubarok.sinaukoding.hris.dao.BaseDAO;
 import com.gusrylmubarok.sinaukoding.hris.dao.EmployeeDAO;
 import com.gusrylmubarok.sinaukoding.hris.entity.Employee;
+import com.gusrylmubarok.sinaukoding.hris.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,5 +49,23 @@ public class EmployeeService extends BaseService<Employee> {
             return entity;
         }
         return null;
+    }
+
+    @Transactional
+    public void inactiveStatus(Employee entity) {
+        if (entity.getId() != null) {
+            Employee reference = getDAO().findReference(entity.getId());
+
+            reference.setEndDate(entity.getEndDate() != null ? entity.getEndDate() : new Date());
+
+            reference.setStatus(reference.getStatus().equals(Employee.StatusEmployee.ACTIVE)
+                    ? Employee.StatusEmployee.INACTIVE
+                    : reference.getStatus());
+        }
+
+    }
+
+    public Employee findByUserId(User param) {
+        return dao.findByUserId(param);
     }
 }

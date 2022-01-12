@@ -1,5 +1,6 @@
 package com.gusrylmubarok.sinaukoding.hris.entity;
 
+import com.gusrylmubarok.sinaukoding.hris.HrisApplication;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +25,7 @@ public abstract class BaseEntity<T> implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "created_time")
+    @Column(name = "created_time", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;
 
@@ -40,28 +41,24 @@ public abstract class BaseEntity<T> implements Serializable {
     private Date updatedTime;
 
     @Column(name = "created_by", columnDefinition = "VARCHAR(100)")
-    private String createdBy;
+    private Long createdBy;
 
     @Column(name = "deleted_by", columnDefinition = "VARCHAR(100)")
-    private String deletedBy;
+    private Long deletedBy;
 
     @Column(name = "updated_by", columnDefinition = "VARCHAR(100)")
-    private String updatedBy;
+    private Long updatedBy;
 
     @PrePersist
     protected void onCreate(){
         setCreatedTime(new Date());
-    }
-
-    @PreRemove
-    protected void onRemove(){
-        setDeleted(Boolean.TRUE);
-        setDeletedTime(new Date());
+        setCreatedBy(HrisApplication.getCurrentUser() != null ? HrisApplication.getCurrentUser().getId() : 0);
     }
 
     @PreUpdate
     protected void onUpdate(){
         setUpdatedTime(new Date());
+        setUpdatedBy(HrisApplication.getCurrentUser() != null ? HrisApplication.getCurrentUser().getId() : 0);
     }
 
 

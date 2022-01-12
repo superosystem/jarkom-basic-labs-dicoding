@@ -28,4 +28,10 @@ public class AuthenticationController extends BaseController {
     public RestResult register(@RequestBody User param) {
         return new RestResult(service.register(param, User.Role.ROLE_USER));
     }
+
+    @PreAuthorize("permitAll()")
+    @PostMapping(value = "do-register/admin")
+    public RestResult registerAdmin(@RequestBody User param) {
+        return new RestResult(service.register(param, User.Role.ROLE_ADMIN));
+    }
 }

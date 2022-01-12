@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("positions")
+@PreAuthorize("permitAll()")
 public class PositionController extends BaseController {
 
     @Autowired
@@ -42,14 +43,27 @@ public class PositionController extends BaseController {
     @PreAuthorize("permitAll()")
     @PutMapping
     public RestResult update(@RequestBody Position position) {
-        position = service.update(position);
+        RestResult result = new RestResult(StatusCode.OPERATION_FAILED);
 
-        return new RestResult(position, position != null ? StatusCode.UPDATE_SUCCESS : StatusCode.UPDATE_FAILED);
+        if (position != null) {
+            result.setData(service.update(position));
+            result.setStatus(StatusCode.UPDATE_SUCCESS);
+        }
+
+        return result;
     }
 
     @PreAuthorize("permitAll()")
     @DeleteMapping(value = "{id}")
     public RestResult delete(@PathVariable Long id) {
-        return new RestResult(service.delete(id) ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
+        boolean deleted = false;
+        Position entity = service.findById(id);
+
+        if (entity != null) {
+            service.updateDeleteStatus(id);
+            deleted = service.delete(id);
+        }
+
+        return new RestResult(deleted ? StatusCode.DELETE_SUCCESS : StatusCode.DELETE_FAILED);
     }
 }

@@ -76,9 +76,6 @@ public abstract class BaseDAO<T extends BaseEntity<T>> {
             T reference = findReference(entity.getId());
 
             entity.setCreatedTime(reference.getCreatedTime());
-            entity.setCreatedBy(reference.getCreatedBy());
-            entity.setUpdatedTime(reference.getUpdatedTime());
-            entity.setUpdatedBy(reference.getUpdatedBy());
 
             if (reference != null){
                 entityManager.merge(entity);
