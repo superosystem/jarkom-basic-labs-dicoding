@@ -1,0 +1,12 @@
+package org.pko.backend.pkobackend
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+
+
+@SpringBootApplication
+class PkobackendApplication
+
+fun main(args: Array<String>) {
+    runApplication<PkobackendApplication>(*args)
+}

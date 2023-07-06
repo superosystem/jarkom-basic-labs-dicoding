@@ -1,0 +1,33 @@
+version: '2.18'
+
+services:
+  db:
+    container_name: pko-postgres
+    image: postgres:15.3
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      POSTGRES_DB: ${PGDATABASE}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - pko-net
+    expose:
+      - 5432
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '100m'
+        max-file: '5'
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  pko-net:
+    driver: bridge
