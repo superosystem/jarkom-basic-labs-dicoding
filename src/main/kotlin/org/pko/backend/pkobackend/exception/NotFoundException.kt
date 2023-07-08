@@ -1,4 +1,4 @@
-package org.pko.backend.pkobackend.util
+package org.pko.backend.pkobackend.exception
 
 import java.lang.RuntimeException
 

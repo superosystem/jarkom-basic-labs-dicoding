@@ -1,10 +1,9 @@
-package org.pko.backend.pkobackend.config
+package org.pko.backend.pkobackend.exception
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import kotlin.streams.toList
-import org.pko.backend.pkobackend.model.ErrorResponse
-import org.pko.backend.pkobackend.model.FieldError
-import org.pko.backend.pkobackend.util.NotFoundException
+import jakarta.validation.ConstraintViolationException
+import org.pko.backend.pkobackend.model.error.ErrorResponse
+import org.pko.backend.pkobackend.model.error.FieldError
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -22,9 +21,33 @@ class RestExceptionHandler {
     fun handleNotFound(exception: NotFoundException): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse()
         errorResponse.httpStatus = HttpStatus.NOT_FOUND.value()
-        errorResponse.exception = exception::class.simpleName
+        errorResponse.exception = "NotFoundException"
         errorResponse.message = exception.message
         return ResponseEntity(errorResponse, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(EntityExistsException::class)
+    fun handleEntityExistsException(exception: EntityExistsException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse()
+        errorResponse.httpStatus = HttpStatus.CONFLICT.value()
+        errorResponse.exception = "EntityExistsException"
+        errorResponse.message = exception.message
+        return ResponseEntity(errorResponse, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationException(exception: ConstraintViolationException):
+            ResponseEntity<ErrorResponse> {
+        val fieldErrors: List<FieldError> = exception.constraintViolations.map { violation ->
+            val field = violation.propertyPath.toString().substringAfterLast('.')
+            FieldError(violation.message, field)
+        }
+
+        val errorResponse = ErrorResponse()
+        errorResponse.httpStatus = HttpStatus.BAD_REQUEST.value()
+        errorResponse.exception = "ValidationException"
+        errorResponse.fieldErrors = fieldErrors
+        return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
@@ -58,8 +81,8 @@ class RestExceptionHandler {
 
     @ExceptionHandler(Throwable::class)
     @ApiResponse(
-        responseCode = "4xx/5xx",
-        description = "Error"
+            responseCode = "4xx/5xx",
+            description = "Error"
     )
     fun handleThrowable(exception: Throwable): ResponseEntity<ErrorResponse> {
         exception.printStackTrace()

@@ -1,10 +1,9 @@
-server:
-  host: ${env.HOST:localhost}
-  port: ${env.PORT:8080}
 spring:
+  config:
+    import: optional:file:./.env[.properties] # read environment variables from .env file
   datasource:
-    url: jdbc:postgresql://${env.PGHOST:localhost}:${env.PGPORT:5432}/${env.PGDATABASE:pkodb}
-    username: ${env.PGUSER:postgres}
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pkodb}
+    username: ${PGUSER:postgres}
     password: ${PGPASSWORD:mysecretpw}
     dbcp2:
       max-wait-millis: 30000
@@ -12,7 +11,7 @@ spring:
       validation-query-timeout: 30
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: false
     properties:
       hibernate:
@@ -21,8 +20,16 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
+  logging:
+    level:
+      org.springframework.security: debug
 #  docker:
 #    compose:
 #      lifecycle-management: start-only
+
+server:
+  host: ${HOST:localhost}
+  port: ${PORT:8080}
+
 springdoc:
   pathsToMatch: /api/**

@@ -12,11 +12,32 @@ tests:
 	${GRADLE} test
 
 build:
-	${GRADLE} build
+	${GRADLE} clean build
 
 ###############################################################################
 ### FLYWAY 																	###
 ###############################################################################
+flywayInfo:
+	# flywayInfo URL=jdbc:postgresql://localhost:5432/pkodb USER=developer PASSWORD=mysecretpw
+	${GRADLE} flywayInfo -Dflyway.url=${URL} -Dflyway.user=${USER} -Dflyway.password=${PASSWORD}
+
+flywayValidate:
+	${GRADLE} flywayValidate -Dflyway.url=${URL} -Dflyway.user=${USER} -Dflyway.password=${PASSWORD}
+
+flywayMigrate:
+	${GRADLE} flywayMigrate -Dflyway.url=${URL} -Dflyway.user=${USER} -Dflyway.password=${PASSWORD}
+
+flywayUndo:
+	${GRADLE} flywayUndo -Dflyway.url=${URL} -Dflyway.user=${USER} -Dflyway.password=${PASSWORD}
+
+flywayClean:
+	${GRADLE} flywayClean -Dflyway.url=${URL} -Dflyway.user=${USER} -Dflyway.password=${PASSWORD}
+
+flywayBaseline:
+	${GRADLE} flywayBaseline -Dflyway.url=${URL} -Dflyway.user=${USER} -Dflyway.password=${PASSWORD}
+
+flywayRepair:
+	${GRADLE} flywayRepair -Dflyway.url=${URL} -Dflyway.user=${USER} -Dflyway.password=${PASSWORD}
 
 ###############################################################################
 ### DOCKER 																	###

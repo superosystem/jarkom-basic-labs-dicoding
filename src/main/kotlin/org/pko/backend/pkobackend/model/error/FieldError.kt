@@ -1,5 +1,4 @@
-package org.pko.backend.pkobackend.model
-
+package org.pko.backend.pkobackend.model.error
 
 data class FieldError(
     var `field`: String? = null,
